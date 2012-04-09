@@ -1,33 +1,40 @@
+# encoding: utf-8
+
 require 'rubygems'
-require 'bundler/setup'
-
-require 'rspec/core/rake_task'
-
+require 'bundler'
+begin
+  Bundler.setup(:default, :development)
+rescue Bundler::BundlerError => e
+  $stderr.puts e.message
+  $stderr.puts "Run `bundle install` to install missing gems"
+  exit e.status_code
+end
+require 'rake'
 
 begin
   require 'jeweler'
-  Jeweler::Tasks.new do |s|
-    s.name         = "email_spec"
-    s.platform     = Gem::Platform::RUBY
-    s.authors      = ['Ben Mabey', 'Aaron Gibralter', 'Mischa Fierer']
-    s.email        = "ben@benmabey.com"
-    s.homepage     = "http://github.com/bmabey/email-spec/"
-    s.summary      = "Easily test email in rspec and cucumber"
-    s.bindir       = "bin"
-    s.description  = s.summary
-    s.require_path = "lib"
-    s.files        = %w(History.txt install.rb MIT-LICENSE.txt README.rdoc Rakefile) + Dir["lib/**/*"] + Dir["rails_generators/**/*"]
-    s.test_files   = Dir["spec/**/*"] + Dir["examples/**/*"]
+  Jeweler::Tasks.new do |gem|
+    # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
+    gem.name         = "email_spec"
+    gem.platform     = Gem::Platform::RUBY
+    gem.authors      = ['Ben Mabey', 'Aaron Gibralter', 'Mischa Fierer']
+    gem.email        = "ben@benmabey.com"
+    gem.homepage     = "http://github.com/bmabey/email-spec/"
+    gem.summary      = "Easily test email in rspec and cucumber"
+    gem.bindir       = "bin"
+    gem.description  = gem.summary
+    gem.require_path = "lib"
+    gem.files        = %w(History.txt MIT-LICENSE.txt README.md Rakefile) + Dir["lib/**/*"] + Dir["rails_generators/**/*"]
+
     # rdoc
-    s.has_rdoc         = true
-    s.extra_rdoc_files = %w(README.rdoc MIT-LICENSE.txt)
-    s.rubyforge_project = 'email-spec'
-    s.add_runtime_dependency "launchy", "~> 2.1"
-    s.add_runtime_dependency "mail", "~> 2.2"
-    s.add_runtime_dependency "rspec", "~> 2.0"
+    gem.has_rdoc          = true
+    gem.extra_rdoc_files  = %w(README.md MIT-LICENSE.txt History.txt)
+
+    # dependencies defined in Gemfile
   end
+  Jeweler::RubygemsDotOrgTasks.new
 rescue LoadError
-  puts "Jeweler not available. Install it with: sudo gem install technicalpickles-jeweler -s http://gems.github.com"
+  puts "Jeweler not available. Install it with: <sudo> gem install jeweler"
 end
 
 begin
@@ -40,7 +47,7 @@ rescue LoadError
 end
 
 require 'rspec/core/rake_task'
-  RSpec::Core::RakeTask.new
+RSpec::Core::RakeTask.new
 
 task :default => [:features, :spec]
 

@@ -18,6 +18,7 @@ Then /^I should see the following summary report:$/ do |expected_report|
 end
 
 Given /^the (\w+) app is setup with the latest generators$/ do |app_name|
+  puts "the #{app_name} app is setup with the latest generators ...."
   app_dir= File.join(root_dir,'examples',"#{app_name}_root")
   email_specs_path = File.join(app_dir,'features','step_definitions','email_steps.rb')
   FileUtils.rm(email_specs_path) if File.exists?(email_specs_path)
@@ -26,7 +27,9 @@ Given /^the (\w+) app is setup with the latest generators$/ do |app_name|
     #Testing using the gem
     #make sure we are listed in the bundle
     Dir.chdir(app_dir) do
-      output =`bundle list`
+      puts "\nabout to call bundle list ..."
+      output = `bundle list`
+      puts "\noutput (`bundle list`) = \n#{output}"
       output.should include('email_spec')
     end
   else
@@ -39,18 +42,31 @@ Given /^the (\w+) app is setup with the latest generators$/ do |app_name|
 end
 
 When /^I run "([^\"]*)" in the (\w+) app$/ do |cmd, app_name|
-  #cmd.gsub!('cucumber', "#{Cucumber::RUBY_BINARY} #{Cucumber::BINARY}")
-  app_path = File.join(root_dir, 'examples', "#{app_name}_root")
-  app_specific_gemfile = File.join(app_path,'Gemfile')
-  Dir.chdir(app_path) do
-    #hack to fight competing bundles (email specs vs rails3_root's
-    if File.exists? app_specific_gemfile
-      orig_gemfile = ENV['BUNDLE_GEMFILE']
-      ENV['BUNDLE_GEMFILE'] = app_specific_gemfile
-      @output = `#{cmd}`
-      ENV['BUNDLE_GEMFILE'] = orig_gemfile
-    else
-      @output = `#{cmd}`
-    end
+  # puts "cmd = #{cmd.inspect}"
+  # puts "app_name = #{app_name.inspect}"
+  # #cmd.gsub!('cucumber', "#{Cucumber::RUBY_BINARY} #{Cucumber::BINARY}")
+  # app_path = File.join(root_dir, 'examples', "#{app_name}_root")
+  # app_path = File.absolute_path(app_path)
+  # app_specific_gemfile = File.join(app_path,'Gemfile')
+  # puts "app_specific_gemfile = #{app_specific_gemfile.inspect}"
+  # Dir.chdir(app_path) do
+  #   puts "pwd = #{`pwd`}"
+  #   #hack to fight competing bundles (email specs vs rails3_root's
+  #   if File.exists? app_specific_gemfile
+  #     orig_gemfile = ENV['BUNDLE_GEMFILE']
+  #     puts "orig_gemfile = #{orig_gemfile.inspect}"
+  #     ENV['BUNDLE_GEMFILE'] = app_specific_gemfile
+  #     puts "`echo $BUNDLE_GEMFILE` = #{`echo $BUNDLE_GEMFILE`}"
+  #     puts "`bundle list` = #{`bundle list`}"
+  #     @output = `#{cmd}`
+  #     ENV['BUNDLE_GEMFILE'] = orig_gemfile
+  #   else
+  #     @output = `#{cmd}`
+  #   end
+  # end
+  
+  setup_bundler_for_example_app(app_name) do |app_specific_gemfile|
+    puts "about to run : ENV['BUNDLE_GEMFILE']=#{app_specific_gemfile} #{cmd} "
+    @output = `ENV['BUNDLE_GEMFILE']=#{app_specific_gemfile} #{cmd}`
   end
 end
