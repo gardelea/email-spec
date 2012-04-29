@@ -1,7 +1,4 @@
-
-[![Build Status](https://secure.travis-ci.org/bmabey/email-spec.png)](http://travis-ci.org/bmabey/email-spec)
-
-## Email Spec
+## Email Spec &nbsp; [![Build Status](https://secure.travis-ci.org/bmabey/email-spec.png)](http://travis-ci.org/bmabey/email-spec)
 
 A collection of RSpec matchers and Cucumber steps to make testing emails go smoothly.
 
