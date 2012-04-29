@@ -26,7 +26,7 @@ Given /^the (\w+) app is setup with the latest generators$/ do |app_name|
     #Testing using the gem
     #make sure we are listed in the bundle
     Dir.chdir(app_dir) do
-      output =`bundle list`
+      output = `bundle list`
       output.should include('email_spec')
     end
   else
@@ -39,10 +39,13 @@ Given /^the (\w+) app is setup with the latest generators$/ do |app_name|
 end
 
 When /^I run "([^\"]*)" in the (\w+) app$/ do |cmd, app_name|
-  #cmd.gsub!('cucumber', "#{Cucumber::RUBY_BINARY} #{Cucumber::BINARY}")
   app_path = File.join(root_dir, 'examples', "#{app_name}_root")
   app_specific_gemfile = File.join(app_path,'Gemfile')
   Dir.chdir(app_path) do
+    # FIXME : this approach does not actually install the gems 
+    #         listed in the rails/sinatra app's Gemfile, it merely 
+    #         sets up the bundle context with those gems. 
+    #         You must still manually install run bundle install in the app's directory.
     #hack to fight competing bundles (email specs vs rails3_root's
     if File.exists? app_specific_gemfile
       orig_gemfile = ENV['BUNDLE_GEMFILE']
@@ -54,3 +57,4 @@ When /^I run "([^\"]*)" in the (\w+) app$/ do |cmd, app_name|
     end
   end
 end
+

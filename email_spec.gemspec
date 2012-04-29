@@ -63,7 +63,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'database_cleaner'
 
   s.add_development_dependency "test-unit"
-
-
   
+  # Needed for the Rails app to work
+  s.add_development_dependency "mimetype-fu"
 end
